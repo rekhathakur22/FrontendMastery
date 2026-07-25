@@ -1,0 +1,380 @@
+# CSS Pseudo-elements (`::`)
+
+## What is a Pseudo-element?
+
+Let's break the word into two parts:
+
+- **Pseudo** = False, virtual, or not actually present.
+- **Element** = An HTML element or a part of an element.
+
+A **pseudo-element** is a special keyword that allows you to **style a specific part of an element or create virtual content that does not exist in the HTML document.**
+
+> **Definition:** A CSS pseudo-element is a keyword prefixed with a double colon (`::`) that selects a specific part of an element or creates virtual content for styling.
+
+---
+
+# Why were Pseudo-elements created?
+
+Sometimes we don't want to style the entire HTML element.
+
+Instead, we may want to:
+
+- Style only the first letter.
+- Style only the first line.
+- Insert text before or after an element.
+- Style the selected text.
+
+Without pseudo-elements, we would have to add extra HTML elements like `<span>` or write JavaScript.
+
+Pseudo-elements let CSS do this without modifying the HTML.
+
+---
+
+# Think of it as "Part of an Element"
+
+Suppose we have:
+
+```html
+<p>Learning CSS is fun.</p>
+```
+
+Normally:
+
+```css
+p {
+    color: blue;
+}
+```
+
+This styles the **entire paragraph**.
+
+But what if we only want the first letter?
+
+```css
+p::first-letter {
+    font-size: 40px;
+    color: red;
+}
+```
+
+Only the **L** becomes large and red.
+
+The paragraph itself remains unchanged.
+
+---
+
+# Common Pseudo-elements
+
+## 1. `::before`
+
+Creates virtual content **before** an element.
+
+### HTML
+
+```html
+<button>Login</button>
+```
+
+### CSS
+
+```css
+button::before {
+    content: "🔒 ";
+}
+```
+
+### Output
+
+```text
+🔒 Login
+```
+
+Notice that the lock icon is **not written in HTML**.
+
+The browser generates it using CSS.
+
+---
+
+## 2. `::after`
+
+Creates virtual content **after** an element.
+
+### HTML
+
+```html
+<button>Download</button>
+```
+
+### CSS
+
+```css
+button::after {
+    content: " ↓";
+}
+```
+
+### Output
+
+```text
+Download ↓
+```
+
+Again, the arrow doesn't exist in HTML.
+
+---
+
+## Why is the `content` Property Required?
+
+For `::before` and `::after`, the browser creates a virtual element.
+
+Without telling the browser **what content should exist**, nothing is displayed.
+
+### Incorrect
+
+```css
+button::before {
+    color: red;
+}
+```
+
+Nothing appears.
+
+### Correct
+
+```css
+button::before {
+    content: "★";
+    color: red;
+}
+```
+
+Now the browser creates the virtual element and displays the star.
+
+Even if you don't want visible text, you must still provide the `content` property.
+
+Example:
+
+```css
+button::before {
+    content: "";
+    display: block;
+    width: 10px;
+    height: 10px;
+    background: red;
+}
+```
+
+---
+
+## 3. `::first-letter`
+
+Styles only the first letter.
+
+```css
+p::first-letter {
+    font-size: 40px;
+    color: crimson;
+}
+```
+
+### HTML
+
+```html
+<p>Frontend Development</p>
+```
+
+Only **F** becomes large.
+
+---
+
+## 4. `::first-line`
+
+Styles only the first line.
+
+```css
+p::first-line {
+    font-weight: bold;
+}
+```
+
+If the paragraph wraps into multiple lines, only the first rendered line is affected.
+
+---
+
+## 5. `::selection`
+
+Styles text selected by the user.
+
+```css
+::selection {
+    background: yellow;
+    color: black;
+}
+```
+
+When users drag the mouse to highlight text, they'll see your custom selection colors.
+
+---
+
+## 6. `::placeholder`
+
+Styles placeholder text inside form fields.
+
+### HTML
+
+```html
+<input type="text" placeholder="Enter your name">
+```
+
+### CSS
+
+```css
+input::placeholder {
+    color: gray;
+    font-style: italic;
+}
+```
+
+Only the placeholder text changes.
+
+---
+
+# Real-world Example
+
+### HTML
+
+```html
+<a href="#">Home</a>
+```
+
+### CSS
+
+```css
+a::before {
+    content: "🏠 ";
+}
+
+a::after {
+    content: " →";
+}
+```
+
+### Output
+
+```text
+🏠 Home →
+```
+
+The icons are generated entirely by CSS.
+
+---
+
+# Common Uses
+
+- Decorative icons
+- Quotes
+- Badges
+- Labels
+- Tooltips
+- Custom bullets
+- Loading effects
+- Decorative borders and overlays
+
+---
+
+# Pseudo-class vs Pseudo-element
+
+| Pseudo-class (`:`) | Pseudo-element (`::`) |
+|--------------------|-----------------------|
+| Selects an element based on its state or condition. | Selects part of an element or creates virtual content. |
+| Examples: `:hover`, `:focus`, `:checked` | Examples: `::before`, `::after`, `::first-letter` |
+| Styles the whole element. | Styles only a part of the element or generated content. |
+| Uses a single colon (`:`). | Uses a double colon (`::`). |
+
+### Example
+
+```css
+button:hover {
+    background: blue;
+}
+```
+
+The **entire button** changes when hovered.
+
+```css
+button::before {
+    content: "★ ";
+}
+```
+
+Only the generated content before the button is affected.
+
+---
+
+# Important Notes
+
+- `::before` and `::after` **require** the `content` property.
+- Pseudo-elements **cannot exist independently**. They are always attached to another element.
+- They do **not** modify the HTML document.
+- They are generated by the browser during rendering.
+- Modern CSS uses **double colon (`::`)** for pseudo-elements to distinguish them from pseudo-classes, although older browsers also accepted a single colon for some pseudo-elements.
+
+---
+
+# Interview Questions
+
+## 1. What is a pseudo-element?
+
+A pseudo-element is a CSS keyword prefixed with `::` that selects a specific part of an element or creates virtual content without modifying the HTML.
+
+---
+
+## 2. What is the difference between `::before` and `::after`?
+
+- `::before` inserts virtual content before the element's content.
+- `::after` inserts virtual content after the element's content.
+
+---
+
+## 3. Why is the `content` property required for `::before` and `::after`?
+
+Because these pseudo-elements generate virtual content. Without the `content` property, the browser has nothing to create, so nothing is displayed.
+
+---
+
+## 4. What is the difference between a pseudo-class and a pseudo-element?
+
+- A **pseudo-class** selects an element based on its **state, position, or user interaction**.
+- A **pseudo-element** selects **part of an element** or creates **virtual content**.
+
+---
+
+# Quick Revision
+
+| Pseudo-element | Purpose |
+|----------------|---------|
+| `::before` | Insert content before an element |
+| `::after` | Insert content after an element |
+| `::first-letter` | Style the first letter |
+| `::first-line` | Style the first line |
+| `::selection` | Style selected text |
+| `::placeholder` | Style placeholder text |
+
+---
+
+# Memory Trick
+
+Think of it like this:
+
+### **Pseudo-class (`:`) → "When?"**
+
+- When the mouse hovers (`:hover`)
+- When an input is focused (`:focus`)
+- When a checkbox is checked (`:checked`)
+
+### **Pseudo-element (`::`) → "Which Part?"**
+
+- First letter (`::first-letter`)
+- First line (`::first-line`)
+- Before the element (`::before`)
+- After the element (`::after`)
