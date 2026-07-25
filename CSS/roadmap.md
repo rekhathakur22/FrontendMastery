@@ -13,7 +13,9 @@ These are the absolute basics every interviewer expects.
 - CSSOM
 - Render Tree
 - Reflow vs Repaint
-- Module 2
+
+
+## Module 2
 
 ### Selectors
 

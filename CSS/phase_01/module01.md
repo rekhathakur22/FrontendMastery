@@ -97,3 +97,9 @@ A CSS Parser is a browser component that reads CSS code, validates its syntax, i
 
 # What is Render Tree ?
 Render tree is a tree like data structure created by combining dom and cssom . It contain the visible element and computed style which used by browser to calculate the layout and pain the element on screen.
+
+# Difference between Repaint and Reflow ?
+**Reflow:**  Reflow is the process in which browser recalculate the size and position of element if change affect the page layout. 
+browser redraw width , padding , margin , space etc;
+
+**Repaint:** Repaint is the process in which browser redraw the visual appearance without changing layout like text color , shadow , background color.
