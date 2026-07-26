@@ -1,0 +1,373 @@
+# JavaScript Execution Notes (Interview Ready)
+
+# JavaScript Execution Pipeline
+
+```text
+JavaScript Source Code
+        │
+        ▼
+      Parser
+        │
+        ▼
+       AST
+        │
+        ▼
+Ignition (Bytecode Compiler)
+        │
+        ▼
+     Bytecode
+        │
+        ▼
+ Interpreter (Ignition)
+        │
+        ▼
+Runtime Profiling
+        │
+        ▼
+Hot Code?
+   │            │
+ No            Yes
+ │              │
+ ▼              ▼
+Continue     TurboFan
+Interpreting    │
+                ▼
+     Optimized Machine Code
+                │
+                ▼
+               CPU
+```
+
+---
+
+# 1. Interpretation
+
+## Definition
+
+Interpretation is the process of executing code instruction-by-instruction without first generating optimized machine code.
+
+> In modern JavaScript, Ignition interprets **bytecode**, not JavaScript source code directly.
+
+## Easy Explanation
+
+Imagine a teacher reading instructions one by one.
+
+```
+Read instruction
+↓
+Understand it
+↓
+Perform it
+↓
+Read next instruction
+```
+
+The interpreter repeats this process every time the function runs.
+
+## Important Points
+
+- Executes bytecode.
+- CPU is **not executing bytecode directly**.
+- CPU executes the interpreter's machine code (written in C++).
+- Slower for code that runs repeatedly.
+
+---
+
+# 2. JIT (Just-In-Time Compilation)
+
+## Interview Definition (30 Seconds)
+
+> Just-In-Time (JIT) Compilation is a runtime optimization technique used by modern JavaScript engines. The engine first converts JavaScript into bytecode and starts executing it. While the program runs, it detects frequently executed (hot) code and compiles that code into optimized machine code so the CPU can execute it directly.
+
+---
+
+## Why JIT Exists
+
+Without JIT:
+
+```
+Function Call
+      ↓
+Interpreter
+      ↓
+CPU
+
+Again...
+
+Function Call
+      ↓
+Interpreter
+      ↓
+CPU
+```
+
+Every execution goes through the interpreter.
+
+With JIT:
+
+```
+First Calls
+      ↓
+Interpreter
+
+Many Calls
+      ↓
+Hot Code Detected
+
+TurboFan
+      ↓
+Machine Code
+
+Future Calls
+      ↓
+CPU Executes Machine Code
+```
+
+---
+
+# 3. What is Hot Code?
+
+Hot code is code that executes many times.
+
+Example:
+
+```javascript
+function add(a, b) {
+    return a + b;
+}
+
+for (let i = 0; i < 1000000; i++) {
+    add(i, i);
+}
+```
+
+Since `add()` is called many times, TurboFan optimizes it.
+
+---
+
+# 4. Does CPU Execute Bytecode?
+
+**No.**
+
+CPU understands only **machine code**.
+
+```
+JavaScript
+     ↓
+Bytecode
+     ↓
+Interpreter (V8)
+     ↓
+CPU executes Interpreter
+```
+
+After optimization:
+
+```
+JavaScript
+      ↓
+Bytecode
+      ↓
+TurboFan
+      ↓
+Machine Code
+      ↓
+CPU
+```
+
+---
+
+# 5. Interpreter vs JIT
+
+| Interpreter | JIT |
+|-------------|-----|
+| Executes bytecode | Executes bytecode first, then compiles hot code |
+| Every execution goes through interpreter | Hot code skips interpreter after optimization |
+| Slower for repeated execution | Faster for repeated execution |
+| No optimized machine code | Generates optimized machine code |
+
+---
+
+# 6. Why Doesn't V8 Compile Everything?
+
+Imagine an application has 5000 functions.
+
+Only 20 functions are ever called.
+
+Compiling all 5000 functions would waste:
+
+- CPU
+- Memory
+- Startup Time
+
+So V8:
+
+1. Generates bytecode quickly.
+2. Starts execution immediately.
+3. Optimizes only important (hot) functions.
+
+---
+
+# 7. Deoptimization
+
+TurboFan makes assumptions.
+
+Example:
+
+```javascript
+add(10,20);
+add(30,40);
+```
+
+It assumes:
+
+- a → Number
+- b → Number
+
+Later:
+
+```javascript
+add("Hello","World");
+```
+
+Assumption becomes invalid.
+
+V8:
+
+- Removes optimized machine code.
+- Falls back to bytecode.
+- Can optimize again later.
+
+This process is called **Deoptimization**.
+
+---
+
+# 8. Complete Execution Flow
+
+```
+JavaScript Source
+        │
+        ▼
+Parser
+        │
+        ▼
+AST
+        │
+        ▼
+Ignition
+(Bytecode Compiler)
+        │
+        ▼
+Bytecode
+        │
+        ▼
+Interpreter Executes
+        │
+        ▼
+Collect Runtime Information
+        │
+        ▼
+Hot Code?
+        │
+   No ─────────────► Continue Interpreting
+        │
+       Yes
+        ▼
+TurboFan
+        │
+        ▼
+Optimized Machine Code
+        │
+        ▼
+CPU
+```
+
+---
+
+# Frequently Asked Interview Questions
+
+## Q1. What is Interpretation?
+
+**Answer:**
+
+Interpretation is the execution of bytecode instruction-by-instruction without generating optimized machine code beforehand.
+
+---
+
+## Q2. What is JIT?
+
+**Answer:**
+
+JIT is a runtime optimization technique where frequently executed code is compiled into optimized machine code.
+
+---
+
+## Q3. Why is it called Just-In-Time?
+
+Because compilation happens **during execution**, only when needed.
+
+---
+
+## Q4. What is Hot Code?
+
+Code executed many times, making it a candidate for optimization.
+
+---
+
+## Q5. Does CPU execute Bytecode?
+
+No.
+
+CPU executes:
+
+- Interpreter's machine code, or
+- Optimized machine code generated by TurboFan.
+
+---
+
+## Q6. Does every function become machine code?
+
+No.
+
+Only hot functions are optimized.
+
+---
+
+## Q7. Why is JIT faster?
+
+Because repeated execution avoids the interpreter and runs optimized machine code directly.
+
+---
+
+## Q8. What is Deoptimization?
+
+When runtime assumptions become invalid, V8 discards optimized machine code and falls back to a general execution path.
+
+---
+
+## Q9. Is JavaScript interpreted or compiled?
+
+**Best Interview Answer**
+
+Modern JavaScript is neither purely interpreted nor purely compiled.
+
+It uses:
+
+- Interpretation
+- JIT Compilation
+
+---
+
+## Q10. Difference between Bytecode and Machine Code?
+
+| Bytecode | Machine Code |
+|----------|--------------|
+| Intermediate representation | CPU instructions |
+| Used by JavaScript engine | Executed directly by CPU |
+| Human can't easily read it | Binary instructions executed by hardware |
+
+---
+
+# 30-Second Interview Answer
+
+> Modern JavaScript engines such as V8 first parse JavaScript into an AST, then Ignition converts it into bytecode. Ignition interprets the bytecode while collecting runtime information. When a function becomes hot, TurboFan compiles it into optimized machine code, allowing the CPU to execute it directly. This combination of interpretation and JIT compilation provides both fast startup and high performance.

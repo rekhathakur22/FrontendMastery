@@ -1,6 +1,7 @@
 # Module 1 — JavaScript Fundamentals
 
-## JavaScript Introduction
+## JavaScript Introductio
+- what is Javascript ?
 - History
 - Why JavaScript was created
 - ECMAScript
@@ -510,7 +511,7 @@ Review everything through a structured process:
 One suggestion for your learning style
 
 From our recent conversations, I know you're building a Frontend Mastery repository and you prefer learning concepts deeply rather than memorizing syntax. A great way to structure this is to create one Markdown file for every topic (for example, Execution Context.md, Closures.md, Event Loop.md) using a consistent template:
-- 
+ 
 - What is it?
 - Why was it introduced?
 - How does it work internally?
